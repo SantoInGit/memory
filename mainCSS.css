@@ -1,0 +1,59 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+#wrapper{
+    margin: 0 auto;
+    width: 410px;
+    height: 410px;
+    padding:4px;
+    background-color: aliceblue;
+}
+.tile{
+    width: 100px;
+    height: 100px;
+    float:left;
+    background-color: aqua ;
+    margin: 1px;
+    border-radius: 5px;
+ 
+    
+}
+img{
+    position: relative;
+    top:40px;
+    left: 40px;
+    display:none;
+}
+#btnPanel{
+    margin: 5px auto;
+    width: 410px;
+    height: 42px;
+    padding: 4px;
+    background-color: aliceblue;
+
+}
+.gameBtn{
+    width: 100px;
+    height: 40px;
+    background-color: aqua;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    margin: 1px;
+    float: right;
+}
+#PlayAgainBtn{
+    display:none;
+}
+#statusPanel{
+    position: relative;
+    margin: 0 auto;
+    width: 300px;
+    left:400px;
+    top: -450px;
+    border: solid 1px aqua;
+    
+}
+

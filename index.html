@@ -1,0 +1,201 @@
+<html>
+    <head>
+        <title> Memory Game </title>
+        <script src="jQeury3_1_1.js" type="text/javascript"></script>
+        <script src="mainJS.js" type="text/javascript"></script>
+            
+        <link type="text/css" rel="stylesheet" href="mainCSS.css">
+        
+    </head>
+    <body>
+        <div id = "wrapper">
+            <div class = "tile" id="1"><img src=""></div>
+            <div class = "tile" id="2"><img src=""></div>
+            <div class = "tile" id="3"><img src=""></div>
+            <div class = "tile" id="4"><img src=""></div>
+            <div class = "tile" id="5"><img src=""></div>
+            <div class = "tile" id="6"><img src=""></div>
+            <div class = "tile" id="7"><img src=""></div>
+            <div class = "tile" id="8"><img src=""></div>
+            <div class = "tile" id="9"><img src=""></div>
+            <div class = "tile" id="10"><img src=""></div>
+            <div class = "tile" id="11"><img src=""></div>
+            <div class = "tile" id="12"><img src=""></div>
+            <div class = "tile" id="13"><img src=""></div>
+            <div class = "tile" id="14"><img src=""></div>
+            <div class = "tile" id="15"><img src=""></div>
+            <div class = "tile" id="16"><img src=""></div> 
+        </div>
+                    
+        <div id="btnPanel">
+            <input type="button" class="gameBtn" id="playAgainBtn" value="Play Again">
+            
+            <input type="button" class="gameBtn" id="reloadBtn" value="Reload">
+            
+            <input type="button" class="gameBtn" id="cheatBtn" value="Cheat">
+            <!--
+            <input type="button" class="gameBtn" id="suffleBtn" value="Reload">
+            -->
+        </div>
+        <div id="statusPanel">
+            <div id="statusPanelTotalMoves">
+                    <p id="totalClicksValue"> Total clicks: </p>
+            </div>
+            <div id="statusPanelTotalMoves">
+                    <p id="totalMovesValue"> Total moves: </p>
+            </div>
+            <div id="statusPanelTotalWrongMoves">
+                    <p id="totalWrongMovesValue"> Total wrong moves: </p>
+            </div>
+            <div id="statusPanelTotalRightMoves">
+                    <p id="totalRightMovesValue"> Total right moves</p>
+            </div>
+            
+        
+        </div>
+        
+        <script>       
+            var clickCount = 0;
+            var WIN_STATE = 8;
+            var totalClickCount=0;
+            var wrongClickCount=0;
+            var rightClickCount=0;
+            var displayedImages = [];
+            var cheatClickCount = 0;
+            var CHEAT_CLICK_ALLOWED = 2;
+            
+            var imgUrlArray = [
+                "image/glyphicons-1-glass.png",
+                "image/glyphicons-2-leaf.png",
+                "image/glyphicons-3-dog.png",
+                "image/glyphicons-4-user.png",
+                "image/glyphicons-5-girl.png",
+                "image/glyphicons-6-car.png",
+                "image/glyphicons-7-user-add.png",
+                "image/glyphicons-8-user-remove.png",
+                "image/glyphicons-1-glass.png",
+                "image/glyphicons-2-leaf.png",
+                "image/glyphicons-3-dog.png",
+                "image/glyphicons-4-user.png",
+                "image/glyphicons-5-girl.png",
+                "image/glyphicons-6-car.png",
+                "image/glyphicons-7-user-add.png",
+                "image/glyphicons-8-user-remove.png"
+            ];  // defining set of 16 images. Two are same to create a match situation
+            var arrayIndex = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]; //a placeholder array. choose a index from this array and take correspoinding index form imgUrlArray to supply the image src. This array is going to be vacant after supplying all the image src.
+            
+            $(function() {
+                $('img').each(function(i){
+                    // for each img tags, set the src attribute to random images from imgUrlArray
+                   $(this).attr('src',imgUrlArray[randomContent()]);
+                    $(this).attr('match','');
+               });
+                    
+            });
+            
+            //jquery to refresh the page
+            $("#reloadBtn, #playAgainBtn").click(function(){
+               window.location.reload(); 
+            });
+            
+            
+            //only 2 cheating view is allowed
+            $("#cheatBtn").mousedown(function(){
+                
+                if (cheatClickCount++ == CHEAT_CLICK_ALLOWED){
+                    $("#cheatBtn").hide();
+                }
+                else{
+                    $("img[match='']").each(function(i){
+                        $(this).fadeIn(500);
+                        $(this).fadeOut();  
+                    });
+                }
+                              
+            });
+            
+            /*$("#cheatBtn").mouseup(function(){
+                $('img').each(function(i){
+                    $(this).fadeOut();
+            });
+                              
+            });
+            */
+            
+            function randomContent(){
+                
+                var index = Math.floor(Math.random()*arrayIndex.length); //choose randomly an index of the array
+                return arrayIndex.splice(index,1); //remove that index and return it
+            }
+
+            
+            
+            $(".tile").click(function(){
+                
+                $(this.firstChild).fadeIn("slow");
+                clickCount = clickCount + 1;
+                totalClickCount += 1;
+                
+                $("#totalClicksValue").html("Total clicks: "  + totalClickCount);
+
+                displayedImages.push($(this.firstChild).attr("src"));
+                displayedImages.push($(this).attr("id"));
+                
+                //displayedImages[0] = src of thefirst clicked img inside the div
+                //displayedImages[1] = id of the first clicked div
+                //displayedImages[2] = src of the second clicked img inside the div
+                //displayedImages[3] = id of the second clicked div                
+                
+                
+                if(clickCount == 2){
+                    if(displayedImages[1] === displayedImages[3]) //ie. if the id of the divs are same ie if same img is clicked twice, hide it.
+                    {
+                        $(document.getElementById(displayedImages[1]).firstChild).fadeOut();
+                        //$(document.getElementById(displayedImages[3]).firstChild).fadeOut();
+                        displayedImages.splice(0,displayedImages.length); //clear out the displayedImages array
+                        clickCount = 0;
+                        wrongClickCount++;
+                        $("#totalWrongMovesValue").html("Total wrong moves:" + wrongClickCount);
+                    }
+                    if(displayedImages[0] === displayedImages[2] ) //ie if the src of the img are same the two images are same. So keep it displayed
+                    {
+                        
+                        var id1 = document.getElementById(displayedImages[1]).getAttribute("id");
+                        $("#".concat(id1)).off('click'); //removing click event from the div element if two images are same
+                        $("#".concat(id1)).css("background-color","aquamarine");
+                        $("#".concat(id1)).children().attr("match","matched");
+                        
+                        var id2 = document.getElementById(displayedImages[3]).getAttribute("id");
+                        $("#".concat(id2)).off("click");
+                        $("#".concat(id2)).css("background-color","aquamarine");
+                        $("#".concat(id2)).children().attr("match","matched");
+                        
+                        displayedImages.splice(0,displayedImages.length); //clearing array
+                        clickCount = 0;
+                        rightClickCount++;
+                         $("#totalRightMovesValue").html("Total right moves:" + rightClickCount);
+                        if(rightClickCount == WIN_STATE){
+                            $("#playAgainBtn").css("display","block");
+                            $("#cheatBtn").hide();
+                        }
+                    }else{ //ie. if the two images are not same hide both the imgs.
+                       
+                        $(document.getElementById(displayedImages[1]).firstChild).fadeOut();
+                        $(document.getElementById(displayedImages[3]).firstChild).fadeOut();
+                        
+                        displayedImages.splice(0,displayedImages.length);
+                        clickCount = 0;
+                        wrongClickCount++;
+                        $("#totalWrongMovesValue").html("Total wrong moves:" + wrongClickCount);
+                    }
+                    
+                    $("#totalMovesValue").html("Total  moves:" + totalClickCount/2 );
+                }
+                   
+            });
+            
+            
+        </script>
+    </body>
+
+</html>
